@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, mixins
 from core.models import Contact
 from .serializers import ContactSerializer
 
@@ -17,8 +17,14 @@ class ContactListSearchAPIView(APIView):
         serializer = ContactSerializer(qs, many=True)
         return Response(serializer.data)
 
+# CreateModelMixin --> Handles POST Data
 
-class ContactAPIView(generics.ListAPIView):
+
+class ContactAPIView(mixins.CreateModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
+                     generics.ListAPIView):
+
     permission_classes = []
     authentication_classes = []
 
@@ -31,16 +37,28 @@ class ContactAPIView(generics.ListAPIView):
             qs = qs.filter(type__icontains=query)
         return qs
 
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
-class ContactCreateAPIView(generics.CreateAPIView):
-    pass
+
+    #def perform_create(self, serializer):
+     #   serializer.save(user=self.request.user)
 
 
-class ContactDetailAPIView(generics.RetrieveAPIView):
+class ContactDetailAPIView(mixins.UpdateModelMixin,
+                           mixins.DestroyModelMixin,
+                           generics.RetrieveAPIView):
     permission_classes = []
     authentication_classes = []
     serializer_class = ContactSerializer
     queryset = Contact.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
     #lookup_field = 'id'
 
     # can be overriddent to get the specific object
