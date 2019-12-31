@@ -1,16 +1,14 @@
 from django.contrib import admin
 from django.urls import path
-from .views import (ContactListSearchAPIView,
-                    ContactAPIView,
+from .views import (ContactAPIView,
                     ContactDetailAPIView,
-                    ContactUpdateAPIView,
-                    ContactDeleteAPIView)
+                    )
 
 app_name = 'relations'
 
 urlpatterns = [
 
-    path('', ContactAPIView.as_view(), name="contact-create"),
+    path('', ContactAPIView.as_view(), name="contact"),
     path('<int:pk>/', ContactDetailAPIView.as_view(), name="contact-detail"),
     #path('create/', ContactCreateAPIView.as_view(), name="contact-create"),
     #path('<int:pk>/update/', ContactUpdateAPIView.as_view(), name="contact-update"),

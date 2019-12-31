@@ -13,7 +13,7 @@ class ContactForm(forms.ModelForm):
             'type',
             'phone_number',
             'email',
-            'image'
+            'image',
         ]
 
     def clean_phone_number(self, *args, **kwargs):

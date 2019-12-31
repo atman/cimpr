@@ -17,6 +17,8 @@ class ContactSerializer(serializers.ModelSerializer):
             'image'
         ]
 
+        read_only_fields = ['user']
+
     def validate_phone_number(self, phone_number, *args, **kwargs):
         # Validate Phone Number
         if phone_number is "":

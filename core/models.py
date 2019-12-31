@@ -4,7 +4,7 @@ from django.conf import settings
 
 
 def upload_image(instance, filename):
-    return "relations/{user}/{filename}".format(user=instance.User, filename=filename)
+    return "relations/{user}/{filename}".format(user=instance.user, filename=filename)
 
 
 class ContactQuerySet(models.QuerySet):
@@ -20,7 +20,7 @@ class User(AbstractUser):
     pass
 
     def __str__(self):
-        return self.email
+        return self.username
 
 
 class Contact(models.Model):

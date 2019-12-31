@@ -6,7 +6,7 @@ from core.forms import ContactForm
 
 
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'type', 'phone_number', 'user']
+    list_display = ['first_name', 'type', 'phone_number', 'user', 'image']
     form = ContactForm
 
     #class Meta:
