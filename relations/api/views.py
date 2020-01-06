@@ -5,23 +5,25 @@ from rest_framework import generics, mixins, permissions
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from core.models import Contact
 from .serializers import ContactSerializer
+from .permissions import IsOwnerOrReadOnly
 
 
 class ContactAPIView(mixins.CreateModelMixin,
                      generics.ListAPIView):
     """LIST & Create API View for Contacts"""
 
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     #authentication_classes = [SessionAuthentication]
 
     serializer_class = ContactSerializer
 
     def get_queryset(self):
         qs = Contact.objects.all()
+        qs_user = qs.filter(user=self.request.user)
         query = self.request.GET.get('q')
         if query is not None:
-            qs = qs.filter(type__icontains=query)
-        return qs
+            qs_user = qs.filter(type__icontains=query)
+        return qs_user
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -44,11 +46,14 @@ class ContactDetailAPIView(generics.RetrieveAPIView,
                            ):
 
 
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     #authentication_classes = [SessionAuthentication]
     serializer_class = ContactSerializer
     queryset = Contact.objects.all()
     lookup_field = 'pk'
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)

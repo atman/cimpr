@@ -53,3 +53,14 @@ class Contact(models.Model):
 
     def __str__(self):
         return str(self.first_name)
+
+    @property
+    def owner(self):
+        return self.user
+
+
+class Blacklist(models.Model):
+    ip_addr = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.ip_addr)
